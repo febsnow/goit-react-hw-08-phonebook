@@ -1,0 +1,14 @@
+.nav {
+  list-style: none;
+  display: flex;
+  padding: 0;
+}
+.link:last-child {
+  margin-left: 10px;
+}
+.link {
+  margin: 0;
+  padding: 0;
+  color: white;
+  text-decoration: none;
+}

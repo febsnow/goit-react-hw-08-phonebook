@@ -1,5 +1,7 @@
 import axios from "axios";
 import authActions from "./auth-actions";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 axios.defaults.baseURL = "https://goit-phonebook-api.herokuapp.com";
 
@@ -21,8 +23,12 @@ const registerUser = (newUser) => (dispatch) => {
     .then(({ data }) => {
       token.set(data.token);
       dispatch(authActions.registerUserSuccess(data));
+      toast.success("Registration successful");
     })
-    .catch((error) => dispatch(authActions.registerUserError(error.message)));
+    .catch((error) => {
+      dispatch(authActions.registerUserError(error.message));
+      toast.error(error.message);
+    });
 };
 
 const loginUser = (user) => (dispatch) => {
@@ -31,10 +37,14 @@ const loginUser = (user) => (dispatch) => {
   axios
     .post("/users/login", user)
     .then(({ data }) => {
-      dispatch(authActions.loginUserSuccess(data));
       token.set(data.token);
+      dispatch(authActions.loginUserSuccess(data));
+      toast.success("Login successful");
     })
-    .catch(({ error }) => dispatch(authActions.loginUserError(error)));
+    .catch((error) => {
+      dispatch(authActions.loginUserError(error.message));
+      toast.error(error.message);
+    });
 };
 
 const logoutUser = () => (dispatch) => {
@@ -46,13 +56,17 @@ const logoutUser = () => (dispatch) => {
       dispatch(authActions.logoutUserSuccess());
       token.unset();
     })
-    .catch(({ error }) => dispatch(authActions.logoutUserError(error)));
+    .catch((error) => {
+      dispatch(authActions.logoutUserError(error));
+      toast.error(error);
+    });
 };
 
 const getCurrentUser = () => (dispatch, getState) => {
   const {
     auth: { token: persistedToken },
   } = getState();
+
   if (!persistedToken) {
     return;
   }
@@ -64,7 +78,10 @@ const getCurrentUser = () => (dispatch, getState) => {
   axios
     .get("/users/current")
     .then(({ data }) => dispatch(authActions.getCurrentUserSuccess(data)))
-    .catch(({ error }) => dispatch(authActions.getCurrentUserError(error)));
+    .catch((error) => {
+      dispatch(authActions.getCurrentUserError(error));
+      toast.error(error);
+    });
 };
 
 export default {

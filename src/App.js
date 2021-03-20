@@ -1,44 +1,54 @@
 import React, { Component, lazy, Suspense } from "react";
 import { Switch } from "react-router";
 import { connect } from "react-redux";
+import { Flip, ToastContainer } from "react-toastify";
 
-import AppBar from "./сomponents/AppBar/AppBar";
+import TopBar from "./сomponents/AppBar/AppBar";
 import authOperations from "./redux/auth/auth-operations";
 import PrivateRoute from "./сomponents/PrivateRoute/PrivateRoute";
 import PublicRoute from "./сomponents/PublicRoute/PublicRoute";
 import { Preloader } from "./сomponents/Loader/Loader";
+import authSelectors from "./redux/auth/auth-selectors";
 
-const HomePage = lazy(() => import("./сomponents/HomePage/HomePage"));
-const RegisterForm = lazy(() =>
-  import("./сomponents/RegisterForm/RegisterForm")
-);
-const LoginForm = lazy(() => import("./сomponents/LoginForm/LoginForm"));
-const PhoneBook = lazy(() => import("./сomponents/PhoneBook/PhoneBook"));
+const HomeView = lazy(() => import("./views/HomeView/HomeView"));
+const RegisterView = lazy(() => import("./views/RegisterView/RegisterView"));
+const LoginView = lazy(() => import("./views/LoginView/LoginView"));
+const PhoneBookView = lazy(() => import("./views/PhoneBookView/PhoneBook"));
 
 class App extends Component {
   componentDidMount() {
     this.props.onGetCurrentUser();
   }
+
   render() {
     return (
       <>
-        <AppBar />
-        <Suspense fallback={Preloader}>
+        {this.props.isLoading && <Preloader />}
+        <ToastContainer
+          transition={Flip}
+          autoClose={2000}
+          hideProgressBar={true}
+          pauseOnFocusLoss={false}
+          draggable={false}
+          pauseOnHover={false}
+        />
+        <TopBar />
+        <Suspense fallback={<Preloader />}>
           <Switch>
-            <PublicRoute path="/" exact component={HomePage} />
+            <PublicRoute path="/" exact component={HomeView} />
             <PublicRoute
               path="/login"
               restricted
               redirectTo="/phonebook"
-              component={LoginForm}
+              component={LoginView}
             />
             <PublicRoute
               path="/register"
               restricted
               redirectTo="/"
-              component={RegisterForm}
+              component={RegisterView}
             />
-            <PrivateRoute path="/phonebook" component={PhoneBook} />
+            <PrivateRoute path="/phonebook" component={PhoneBookView} />
           </Switch>
         </Suspense>
       </>
@@ -46,6 +56,9 @@ class App extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  loading: authSelectors.isLoading(state),
+});
 const mapDispatchToProps = (dispatch) => ({
   onGetCurrentUser: () => dispatch(authOperations.getCurrentUser()),
 });

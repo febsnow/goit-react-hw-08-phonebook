@@ -1,0 +1,16 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 500px;
+  padding: 15px;
+}
+
+.formField {
+  margin-bottom: 10px;
+}
+.registerBtn {
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}

@@ -1,0 +1,11 @@
+.userMenu {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  /* color: white; */
+}
+button.logout {
+  margin-left: 20px;
+  color: inherit;
+  border-color: inherit;
+}

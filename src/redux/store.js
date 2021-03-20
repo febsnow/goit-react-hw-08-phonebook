@@ -1,6 +1,6 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { authReducer } from "./auth/auth-reducers";
-import { contactsReducer } from "./contacts/reducers";
+import { contactsReducer } from "./contacts/contacts-reducers";
 import {
   persistStore,
   persistReducer,

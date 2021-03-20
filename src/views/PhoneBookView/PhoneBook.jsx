@@ -7,7 +7,6 @@ import AddContactForm from "../../сomponents/AddContactForm/AddContactForm";
 import ContactList from "../../сomponents/ContactsList/ContactList";
 import Filter from "../../сomponents/Filter/Filter";
 import Logo from "../../сomponents/Logo/Logo";
-import ErrorPrompt from "../../сomponents/ErrorPrompt/ErrorPrompt";
 import { Preloader } from "../../сomponents/Loader/Loader";
 
 import operations from "../../redux/contacts/contacts-operations";
@@ -32,7 +31,6 @@ class PhoneBook extends Component {
     return (
       <>
         {isLoading && <Preloader />}
-        {error && <ErrorPrompt message={error} />}
 
         <CSSTransition
           in={true}
@@ -105,7 +103,7 @@ const mapStateToProps = (state) => {
   return {
     items: getAllContacts(state),
     isLoading: isContactsLoading(state),
-    error: getError(state),
+    // error: getError(state),
   };
 };
 

@@ -8,7 +8,12 @@ import {
   getFilteredContacts,
 } from "../../redux/contacts/contacts-selectors";
 import "./ContactList.css";
-import ErrorPrompt from "../ErrorPrompt/ErrorPrompt";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import IconButton from "@material-ui/core/IconButton";
+import contactsActions from "../../redux/contacts/contacts-actions";
+// import ErrorPrompt from "../ErrorPrompt/ErrorPrompt";
 
 class ContactList extends Component {
   static propTypes = {
@@ -17,7 +22,7 @@ class ContactList extends Component {
   };
 
   render() {
-    const { items, handleRemove } = this.props;
+    const { items, handleRemove, pickContactToEdit } = this.props;
 
     return (
       <>
@@ -36,15 +41,34 @@ class ContactList extends Component {
                   <li className="listItem">
                     <span className="info">{contact.name}:</span>
                     <span className="info">{contact.number}</span>
-                    <button
-                      className="button"
-                      type="button"
-                      onClick={() => {
-                        handleRemove(contact.id);
-                      }}
-                    >
-                      Удалить
-                    </button>
+                    <ButtonGroup>
+                      <IconButton
+                        variant="outlined"
+                        size="small"
+                        color="default"
+                        type="button"
+                        onClick={() =>
+                          pickContactToEdit(
+                            contact.id,
+                            contact.name,
+                            contact.number
+                          )
+                        }
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        variant="contained"
+                        size="small"
+                        color="secondary"
+                        type="button"
+                        onClick={() => {
+                          handleRemove(contact.id);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </ButtonGroup>
                   </li>
                 </CSSTransition>
               );
@@ -59,14 +83,16 @@ const mapStateToProps = (state) => {
   const allContacts = getAllContacts(state);
   const filteredContacts = getFilteredContacts(state);
 
-  if (filteredContacts.length > 0) {
+  if (filteredContacts && filteredContacts.length > 0) {
     return { items: filteredContacts };
   }
-  if (filteredContacts.length === 0) {
+  if (filteredContacts && filteredContacts.length === 0) {
     return { items: null };
   }
 
-  return { items: allContacts };
+  return {
+    items: allContacts,
+  };
   // return {
   //   items: filteredContacts.length > 0 ? filteredContacts : allContacts,
   // };
@@ -75,6 +101,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleRemove: (id) => dispatch(operations.removeContact(id)),
+    pickContactToEdit: (id, name, number) =>
+      dispatch(contactsActions.pickContactToEdit(id, name, number)),
   };
 };
 

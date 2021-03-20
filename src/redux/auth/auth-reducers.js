@@ -3,12 +3,16 @@ import { combineReducers, createReducer } from "@reduxjs/toolkit";
 import actions from "./auth-actions";
 
 const {
+  registerUserRequest,
   registerUserSuccess,
   registerUserError,
+  loginUserRequest,
   loginUserSuccess,
   loginUserError,
+  logoutUserRequest,
   logoutUserSuccess,
   logoutUserError,
+  getCurrentUserRequest,
   getCurrentUserSuccess,
   getCurrentUserError,
 } = actions;
@@ -29,10 +33,14 @@ const token = createReducer(null, {
 });
 
 const error = createReducer(null, {
-  [registerUserError]: (_, { payload }) => payload.message,
+  [registerUserError]: (_, { payload }) => payload,
   [loginUserError]: (_, { payload }) => payload,
   [logoutUserError]: (_, { payload }) => payload,
   [getCurrentUserError]: (_, { payload }) => payload,
+  [registerUserSuccess]: () => null,
+  [loginUserSuccess]: () => null,
+  [logoutUserSuccess]: () => null,
+  [getCurrentUserSuccess]: () => null,
 });
 
 const isLoggedIn = createReducer(false, {
@@ -45,9 +53,25 @@ const isLoggedIn = createReducer(false, {
   [logoutUserSuccess]: () => false,
 });
 
+const loading = createReducer(false, {
+  [registerUserRequest]: () => true,
+  [registerUserSuccess]: () => false,
+  [registerUserError]: () => false,
+  [loginUserRequest]: () => true,
+  [loginUserSuccess]: () => false,
+  [loginUserError]: () => false,
+  [logoutUserRequest]: () => true,
+  [logoutUserSuccess]: () => false,
+  [logoutUserError]: () => false,
+  [getCurrentUserRequest]: () => true,
+  [getCurrentUserSuccess]: () => false,
+  [getCurrentUserError]: () => false,
+});
+
 export const authReducer = combineReducers({
   user,
   token,
   error,
   isLoggedIn,
+  loading,
 });

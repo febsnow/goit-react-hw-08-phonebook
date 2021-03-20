@@ -14,9 +14,12 @@
 
 .list {
   padding-left: 20px;
+  max-height: 150px;
+  overflow-y: auto;
 }
 
 .listItem {
+  max-width: 340px;
   display: flex;
   align-items: center;
   justify-content: space-between;
